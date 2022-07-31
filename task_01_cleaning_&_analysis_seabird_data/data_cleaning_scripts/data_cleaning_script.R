@@ -38,7 +38,7 @@ seabirds_raw_data_Bird_data_by_record_ID <- read_excel(here("raw_data/seabirds.x
 
 Bird_data_by_record_ID <- read_excel("raw_data/seabirds.xls",
                                      sheet = "Bird data by record ID")
-Bird_data_by_record_ID <- read_excel(here("raw_data/seabirds.xls"), sheet = "Bird data by record ID")
+Bird_data_by_record_ID <- read_excel(here("raw_data/seabirds.xls"), sheet = "Bird data by record ID") # receiving error message "warning message: expecting logical in I21756 / R21756C9: got 'M'"
 
 
 Ship_data_by_record_ID <- read_excel("raw_data/seabirds.xls",
@@ -88,5 +88,9 @@ view(joined_BD_record_ID_and_SD_record_ID_IJ)
 names(joined_BD_record_ID_and_SD_record_ID_LJ)
 ## interesting to note that there are 2 columns that don't appear when you view the data but are there when you invoke the names command eg LATCELL AND LONGCELL.
 joined_BD_record_ID_and_SD_record_ID_LJ_specific_columns <- joined_BD_record_ID_and_SD_record_ID_LJ %>% 
-  select(RECORD.x, `RECORD ID`, `Species common name (taxon [AGE / SEX / PLUMAGE PHASE])`, `Species  scientific name (taxon [AGE /SEX /  PLUMAGE PHASE])`, `Species abbreviation`, COUNT, LAT, LONG, LATCELL, LONGECELL)
+  select(RECORD.x, `RECORD ID`, `Species common name (taxon [AGE / SEX / PLUMAGE PHASE])`, `Species  scientific name (taxon [AGE /SEX /  PLUMAGE PHASE])`, `Species abbreviation`, COUNT, DATE, LAT, LONG, LATCELL, LONGECELL)
 view(joined_BD_record_ID_and_SD_record_ID_LJ_specific_columns)
+
+
+# writing the cleaned data to a markdown file
+write_csv(joined_BD_record_ID_and_SD_record_ID_LJ_specific_columns, "clean_data/cleaned_seabird_data.csv")
