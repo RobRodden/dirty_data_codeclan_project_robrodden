@@ -16,6 +16,7 @@ seabirds_raw_data <- read_excel(here("raw_data/seabirds.xls"))
 seabirds_raw_data <- read_excel(here("raw_data/seabirds.xls"))
 ## and how many sheets does the excel file contain
 excel_sheets("raw_data/seabirds.xls")
+
 ## dimensions of dataset
 dim(seabirds_raw_data)
 
@@ -34,17 +35,27 @@ seabirds_raw_data_Bird_data_by_record_ID <- read_excel(here("raw_data/seabirds.x
                                                             sheet = "Bird data by record ID"))
 
 # so at present I'm just loading in the data and not using the here command
-Ship_data_by_record_ID <- read_excel("raw_data/seabirds.xls",
-                                                       sheet = "Ship data by record ID")
 
 Bird_data_by_record_ID <- read_excel("raw_data/seabirds.xls",
-                                                            sheet = "Bird data by record ID")
+                                     sheet = "Bird data by record ID")
+Bird_data_by_record_ID <- read_excel(here("raw_data/seabirds.xls"), sheet = "Bird data by record ID")
+
+
+Ship_data_by_record_ID <- read_excel("raw_data/seabirds.xls",
+                                                       sheet = "Ship data by record ID")
+Ship_data_by_record_ID <- read_excel(here("raw_data/seabirds.xls"), sheet = "Ship data by record ID")
 
 Ship_data_codes <- read_excel("raw_data/seabirds.xls",
                                                        sheet = "Ship data codes")
+Ship_data_codes <- read_excel(here("raw_data/seabirds.xls"), sheet = "Ship data codes")
 
 Bird_data_codes <- read_excel("raw_data/seabirds.xls",
                                                        sheet = "Bird data codes")
+Bird_data_codes <- read_excel(here("raw_data/seabirds.xls"), sheet = "Bird data codes")
+
+
+
+
 # just a personal prefernce to view the data
 view(Bird_data_by_record_ID)
 view(Ship_data_by_record_ID)
