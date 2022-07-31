@@ -38,7 +38,10 @@ seabirds_raw_data_Bird_data_by_record_ID <- read_excel(here("raw_data/seabirds.x
 
 Bird_data_by_record_ID <- read_excel("raw_data/seabirds.xls",
                                      sheet = "Bird data by record ID")
-Bird_data_by_record_ID <- read_excel(here("raw_data/seabirds.xls"), sheet = "Bird data by record ID") # receiving error message "warning message: expecting logical in I21756 / R21756C9: got 'M'"
+Bird_data_by_record_ID <- read_excel(here("raw_data/seabirds.xls"), sheet = "Bird data by record ID") # receiving error message "warning message: expecting logical in I21756 / R21756C9: got 'M'"; having looked at the data I can see there is one entry 
+
+# this error can be resolved by upping the guess_max from it's default 1000 to 30000 - taking it past the issue.
+Bird_data_by_record_ID <- read_excel(here("raw_data/seabirds.xls"), sheet = "Bird data by record ID", guess_max = 30000)
 
 
 Ship_data_by_record_ID <- read_excel("raw_data/seabirds.xls",
@@ -54,15 +57,14 @@ Bird_data_codes <- read_excel("raw_data/seabirds.xls",
 Bird_data_codes <- read_excel(here("raw_data/seabirds.xls"), sheet = "Bird data codes")
 
 
-
-
 # just a personal prefernce to view the data
+view(seabirds_raw_data)
 view(Bird_data_by_record_ID)
 view(Ship_data_by_record_ID)
 view(Ship_data_codes)
 view(Bird_data_codes)
 
-view(seabirds_raw_data)
+
 
 
 what_does_data_look_like_after_using_clean_names <- clean_names(seabirds_raw_data)
