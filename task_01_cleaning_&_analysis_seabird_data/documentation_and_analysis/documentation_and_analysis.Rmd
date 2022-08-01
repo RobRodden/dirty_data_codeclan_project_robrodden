@@ -40,7 +40,7 @@ assertr_long_lat_values_in_seabird_data_check <- function(seabird_data){
 }
 assertr_long_lat_values_in_seabird_data_check(cleaned_seabird_data)
 
-# having run this test there are a number fails due to missing data (eg NA's) - will remove the NA's in the data_cleaning_script
+# having run this test there are a number fails due to missing data (eg NA's) - will remove the NA's in the data_cleaning_script (see line 100 in the file 'data_cleaning_script.R')
 
 ```
 
@@ -72,13 +72,59 @@ names(cleaned_names_cleaned_seabird_data)
 
 ```
 
-# answering the first question: 
+# answering the first question: Which bird had the most individual sightings?
 ```{r}
 summarised_scientific_name <- cleaned_names_cleaned_seabird_data %>% 
   group_by(species_common_name_taxon_age_sex_plumage_phase, species_scientific_name_taxon_age_sex_plumage_phase, species_abbreviation) %>% 
 summarise(character_count = n()) %>% 
 arrange(desc(character_count))
 head(summarised_scientific_name)
+
+```
+
+# answering the second quesion: Which bird had the highest total count?
+```{r}
+data_new2 <- as.data.frame(apply(test, 2, function(x) gsub("\\s+", "", x))) # Remove blanks
+glimpse(data_new2)
+
+data_new2 %>% 
+  mutate(count = as.numeric(count)) %>%
+  group_by(species_abbreviation, count) %>% 
+  summarise(count = sum(count)) %>% 
+  arrange(desc(count))
+
+test <- summarised_count_of_sightings %>% 
+  group_by(species_abbreviation, count) %>% 
+    summarise(count = sum(count)) %>% 
+    # sum(count, NA, na.rm = TRUE) %>% 
+  arrange(desc(count))
+
+view(test)
+
+
+##### ignore these
+test2 <- test %>% 
+  group_by(species_abbreviation, count) %>% 
+  summarise(count = sum(count)) %>% 
+  arrange(desc(count))
+  head(test2)
+
+
+summarised_count_of_sightings <- cleaned_names_cleaned_seabird_data %>%
+  group_by(species_abbreviation) %>% 
+  summarise(count = sum(is.na(count))) %>% 
+arrange(desc(count))
+head(summarised_count_of_sightings)
+
+summarised_count_of_sightings <- cleaned_names_cleaned_seabird_data %>%
+  select(species_abbreviation, count)
+view(summarised_count_of_sightings)
+
+test <- summarise(summarised_count_of_sightings,sum(is.na(count))) %>%
+  arrange(desc(count))
+
+
+head(summarised_count_of_sightings)
 
 ```
 

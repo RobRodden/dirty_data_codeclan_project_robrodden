@@ -97,7 +97,7 @@ view(joined_BD_record_ID_and_SD_record_ID_LJ_specific_columns)
 # writing the cleaned data to a markdown file
 write_csv(joined_BD_record_ID_and_SD_record_ID_LJ_specific_columns, "clean_data/cleaned_seabird_data.csv")
 
-# picking up the file needing missing lat and long values addressed
+# as indicated at line 43 in the file 'documentation_and_analysis.Rmd" picking up the file needing missing lat and long values addressed.
 
 # replacing any missing values in latitude (LAT) or longitude (LONG) with 0
 lat_long_NA_replaced_by_mutate <- cleaned_seabird_data %>% mutate(LAT = coalesce(LAT, 0, na.rm = TRUE),
