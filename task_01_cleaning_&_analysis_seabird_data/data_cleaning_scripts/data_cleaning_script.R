@@ -6,7 +6,7 @@ library(readxl)
 library(janitor)
 library(here)
 
-#test where the top level of the project directory is 
+# test where the top level of the project directory is 
 here::here()
 
 seabirds_raw_data <- read_excel(here("raw_data/seabirds.xls"))
@@ -96,3 +96,12 @@ view(joined_BD_record_ID_and_SD_record_ID_LJ_specific_columns)
 
 # writing the cleaned data to a markdown file
 write_csv(joined_BD_record_ID_and_SD_record_ID_LJ_specific_columns, "clean_data/cleaned_seabird_data.csv")
+
+# picking up the file needing missing lat and long values addressed
+
+# replacing any missing values in latitude (LAT) or longitude (LONG) with 0
+lat_long_NA_replaced_by_mutate <- cleaned_seabird_data %>% mutate(LAT = coalesce(LAT, 0, na.rm = TRUE),
+                                                                  LONG = coalesce(LONG, 0, na.rm = TRUE))
+
+# writing this back to our clean data folder
+write_csv(lat_long_NA_replaced_by_mutate, "clean_data/cleaned_seabird_data_lat_long_zeros.csv")

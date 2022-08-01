@@ -14,8 +14,71 @@ joined_BD_record_ID_and_SD_record_ID_IJ %>%
 ```
 
 ```{r}
+# test where the top level of the project directory is
 here::here()
+
+# loading packages
+library(janitor)
+cleaned_names_with_janitor <- cleaned_seabird_data
+view(cleaned_names_with_janitor)
+
+# loading in the cleaned data
 cleaned_seabird_data <- read_csv(here("clean_data/cleaned_seabird_data.csv"))
 view(cleaned_seabird_data)
+glimpse(cleaned_seabird_data)
+```
+
+```{r}
+# to check that latitude and longitude data don't have any unusual data.
+
+library(assertr)
+assertr_long_lat_values_in_seabird_data_check <- function(seabird_data){
+
+  seabird_data %>% 
+    verify(LAT >= -90 & LAT <= 90) %>% 
+    verify(LONG >= -180 & LONG <= 180)
+}
+assertr_long_lat_values_in_seabird_data_check(cleaned_seabird_data)
+
+# having run this test there are a number fails due to missing data (eg NA's) - will remove the NA's in the data_cleaning_script
+
+```
+
+```{r}
+# picking back up the data after changing lat and long NA's to 0's
+
+cleaned_seabird_data_lat_long_NAs_replaced <- read_csv(here("clean_data/cleaned_seabird_data_lat_long_zeros.csv"))
+view(cleaned_seabird_data_lat_long_NAs_replaced)
+```
+
+
+```{r}
+# rerunning our assertr test to check that our missing data (NA's) have been replaced by 0
+assertr_long_lat_values_in_seabird_data_check <- function(seabird_data){
+
+  seabird_data %>% 
+    verify(LAT >= -90 & LAT <= 90) %>% 
+    verify(LONG >= -180 & LONG <= 180)
+}
+assertr_long_lat_values_in_seabird_data_check(cleaned_seabird_data_lat_long_NAs_replaced)
+
+# no errors this time round.
+```
+# now to clean the names
+```{r}
+library(janitor)
+cleaned_names_cleaned_seabird_data <- clean_names(cleaned_seabird_data_lat_long_NAs_replaced)
+names(cleaned_names_cleaned_seabird_data)
+
+```
+
+# answering the first question: 
+```{r}
+summarised_scientific_name <- cleaned_names_cleaned_seabird_data %>% 
+  group_by(species_common_name_taxon_age_sex_plumage_phase, species_scientific_name_taxon_age_sex_plumage_phase, species_abbreviation) %>% 
+summarise(character_count = n()) %>% 
+arrange(desc(character_count))
+head(summarised_scientific_name)
+
 ```
 
