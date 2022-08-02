@@ -41,6 +41,7 @@ assertr_long_lat_values_in_seabird_data_check <- function(seabird_data){
 assertr_long_lat_values_in_seabird_data_check(cleaned_seabird_data)
 
 # having run this test there are a number fails due to missing data (eg NA's) - will remove the NA's in the data_cleaning_script (see line 100 in the file 'data_cleaning_script.R')
+# as an observation, i wonder whether I could fill the data using over observations eg, same person on the same date - therefore I know where they were (however I don't know that I have time at the present).
 
 ```
 
@@ -72,7 +73,7 @@ names(cleaned_names_cleaned_seabird_data)
 
 ```
 
-# answering the first question: Which bird had the most individual sightings?
+# Q1: Which bird had the most individual sightings?
 ```{r}
 summarised_scientific_name <- cleaned_names_cleaned_seabird_data %>% 
   group_by(species_common_name_taxon_age_sex_plumage_phase, species_scientific_name_taxon_age_sex_plumage_phase, species_abbreviation) %>% 
@@ -82,14 +83,24 @@ head(summarised_scientific_name)
 
 ```
 
-# answering the second quesion: Which bird had the highest total count?
+# Q2: Which bird had the highest total count?
 ```{r}
-data_new2 <- as.data.frame(apply(test, 2, function(x) gsub("\\s+", "", x))) # Remove blanks
+
+cleaned_names_cleaned_seabird_data %>% 
+  group_by(species_common_name_taxon_age_sex_plumage_phase, species_scientific_name_taxon_age_sex_plumage_phase, species_abbreviation, count) %>% 
+  summarise(count = sum(count)) %>% 
+  arrange(desc(count))
+
+# therefore bird with highest total count = short tailed shearwater
+
+# to note I tried a number of alternatives eg I figured that that column name with the most accurate classification of the birds would be the Species Abbreviation however despite repeated attempts I could get it down to one count per entry:
+
+data_new2 <- as.data.frame(apply(test, 2, function(x) gsub("\\s+", "", x))) # Removes blanks, however changes count column to character; I address this in the next step.
 glimpse(data_new2)
 
 data_new2 %>% 
   mutate(count = as.numeric(count)) %>%
-  group_by(species_abbreviation, count) %>% 
+  group_by(species_common_name_taxon_age_sex_plumage_phase, species_scientific_name_taxon_age_sex_plumage_phase, species_abbreviation, count) %>% 
   summarise(count = sum(count)) %>% 
   arrange(desc(count))
 
@@ -101,30 +112,80 @@ test <- summarised_count_of_sightings %>%
 
 view(test)
 
+# just using this to veiw column names
+names(cleaned_names_cleaned_seabird_data)
 
-##### ignore these
+##### ignore these - various unsuccessful attempts
+
+test3 <- read_csv(here("clean_data/test_specific_columns.csv"))
+test3 <- clean_names(test3)
+data_new3 <- as.data.frame(apply(test3, 2, function(x) gsub("\\s+", "", x))) # Remove blanks
+glimpse(data_new3)
+
+data_new3 %>% 
+  mutate(count = as.numeric(count)) %>%
+  group_by(species_abbreviation, count) %>% 
+  summarise(count = sum(count)) %>% 
+  arrange(desc(count))
+  
 test2 <- test %>% 
   group_by(species_abbreviation, count) %>% 
   summarise(count = sum(count)) %>% 
   arrange(desc(count))
   head(test2)
 
-
 summarised_count_of_sightings <- cleaned_names_cleaned_seabird_data %>%
-  group_by(species_abbreviation) %>% 
-  summarise(count = sum(is.na(count))) %>% 
+  group_by(species_common_name_taxon_age_sex_plumage_phase, species_scientific_name_taxon_age_sex_plumage_phase, species_abbreviation, count) %>% 
+  summarise(count = sum(!is.na(count))) %>% 
 arrange(desc(count))
 head(summarised_count_of_sightings)
 
 summarised_count_of_sightings <- cleaned_names_cleaned_seabird_data %>%
-  select(species_abbreviation, count)
+  select(species_abbreviation, count) %>% 
+  arrange(desc(count))
 view(summarised_count_of_sightings)
 
-test <- summarise(summarised_count_of_sightings,sum(is.na(count))) %>%
+
+```
+
+```{r}
+# alsternative approach provided by a colleague - I'm personally still unclear as to whether I'm just misunderstanding the quesion.
+
+# group by bird name and take a sum of count, join this back into the table
+# to allow more names info to be pulled, arrange and slice head to get top hit
+cleaned_names_cleaned_seabird_data %>% 
+  group_by(species_common_name_taxon_age_sex_plumage_phase) %>% 
+  summarise(total_count = sum(count)) %>% 
+  arrange(desc(total_count))
+
+cleaned_names_cleaned_seabird_data %>% 
+  group_by(species_common_name_taxon_age_sex_plumage_phase) %>% 
+  summarise(total_count = sum(count)) %>% 
+  left_join(cleaned_names_cleaned_seabird_data, "species_common_name_taxon_age_sex_plumage_phase") %>% 
+  select(species_common_name_taxon_age_sex_plumage_phase, 
+         species_scientific_name_taxon_age_sex_plumage_phase, 
+         species_abbreviationn, total_count) %>%
+  arrange(desc(total_count)) %>% 
+  slice_head()
+  
+# Answer: A Black-billed gull, count = 7732
+```
+
+# Q3 Which bird had the highest total count above a latitude of -30?
+```{r}
+cleaned_names_cleaned_seabird_data %>% 
+  group_by(species_common_name_taxon_age_sex_plumage_phase, species_scientific_name_taxon_age_sex_plumage_phase, species_abbreviation, lat, count) %>% 
+  filter(lat > -30) %>% 
+  summarise(count = sum(count)) %>% 
   arrange(desc(count))
+```
 
-
-head(summarised_count_of_sightings)
-
+# Q4: How many different types of birds were only ever seen in groups of 1?
+```{r}
+cleaned_names_cleaned_seabird_data %>% 
+  group_by(species_abbreviation, count) %>% 
+  filter(count == 1) %>% 
+  summarise(character_count = n()) %>% 
+  arrange(desc(character_count))
 ```
 

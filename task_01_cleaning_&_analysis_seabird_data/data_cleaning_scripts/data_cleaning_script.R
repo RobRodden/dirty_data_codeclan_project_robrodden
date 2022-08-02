@@ -93,7 +93,6 @@ joined_BD_record_ID_and_SD_record_ID_LJ_specific_columns <- joined_BD_record_ID_
   select(RECORD.x, `RECORD ID`, `Species common name (taxon [AGE / SEX / PLUMAGE PHASE])`, `Species  scientific name (taxon [AGE /SEX /  PLUMAGE PHASE])`, `Species abbreviation`, COUNT, DATE, LAT, LONG, LATCELL, LONGECELL)
 view(joined_BD_record_ID_and_SD_record_ID_LJ_specific_columns)
 
-
 # writing the cleaned data to a markdown file
 write_csv(joined_BD_record_ID_and_SD_record_ID_LJ_specific_columns, "clean_data/cleaned_seabird_data.csv")
 
@@ -105,3 +104,13 @@ lat_long_NA_replaced_by_mutate <- cleaned_seabird_data %>% mutate(LAT = coalesce
 
 # writing this back to our clean data folder
 write_csv(lat_long_NA_replaced_by_mutate, "clean_data/cleaned_seabird_data_lat_long_zeros.csv")
+
+
+
+
+
+### alt version
+test_specific_columns <- joined_BD_record_ID_and_SD_record_ID_LJ %>% 
+  select(`Species abbreviation`, COUNT)
+view(test_specific_columns)
+write_csv(test_specific_columns, "clean_data/test_specific_columns.csv")
