@@ -95,11 +95,11 @@ cleaned_names_cleaned_seabird_data %>%
 
 # to note I tried a number of alternatives eg I figured that that column name with the most accurate classification of the birds would be the Species Abbreviation however despite repeated attempts I could not get it down to one count per entry:
 
-data_new2 <- as.data.frame(apply(test, 2, function(x) gsub("\\s+", "", x))) # Removes blanks, however changes count column to character; I address this in the next step.
+data_new2 <- as.data.frame(apply(test, 2, function(x) gsub("\\s+", "", x))) # Removes blanks (which is ok as column seems to contain only 1 word entries - this is an attempt to consolidate multiple entries into 1), however changes count column to character; I address this in the next step.
 glimpse(data_new2)
 
 data_new2 %>% 
-  mutate(count = as.numeric(count)) %>%
+  mutate(count = as.numeric(count)) %>% # changing count column back to a double (sourced from the internet)
   group_by(species_common_name_taxon_age_sex_plumage_phase, species_scientific_name_taxon_age_sex_plumage_phase, species_abbreviation, count) %>% 
   summarise(count = sum(count)) %>% 
   arrange(desc(count))
