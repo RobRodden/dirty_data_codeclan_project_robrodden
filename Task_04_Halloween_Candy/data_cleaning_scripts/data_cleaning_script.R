@@ -9,26 +9,26 @@ library(here)
 # test where the top level of the project directory is 
 here::here()
 
-seabirds_raw_data <- read_excel(here("raw_data/seabirds.xls"))
+XXXX <- read_excel(here("raw_data/seabirds.xls"))
 
 # now to take a look at some of the meta data
 ## loading in the raw data - as a personal preference I also like to view the data at this point
-seabirds_raw_data <- read_excel(here("raw_data/seabirds.xls"))
+XXXX <- read_excel(here("raw_data/seabirds.xls"))
 ## and how many sheets does the excel file contain
-excel_sheets("raw_data/seabirds.xls")
+excel_sheets("raw_data/XXXX.xls")
 
 ## dimensions of dataset
-dim(seabirds_raw_data)
+dim(XXXX)
 
 ## investigate columns 
-view(seabirds_raw_data)
+view(XXXX)
 
 ## total number of missing values in dataset
-sum(is.na(seabirds_raw_data))
+sum(is.na(XXXX))
 
 ## how many rows are lost if you drop NAs
-nrow(seabirds_raw_data) - nrow(drop_na(seabirds_raw_data))
-glimpse(seabirds_raw_data)
+nrow(XXXX) - nrow(drop_na(XXXX))
+glimpse(XXXX)
 
 # discovered that this doesn't work eg can't use the here command and load in a specific sheet
 seabirds_raw_data_Bird_data_by_record_ID <- read_excel(here("raw_data/seabirds.xls",
@@ -99,9 +99,6 @@ write_csv(joined_BD_record_ID_and_SD_record_ID_LJ_specific_columns, "clean_data/
 # as indicated at line 43 in the file 'documentation_and_analysis.Rmd" picking up the file needing missing lat and long values addressed.
 
 # replacing any missing values in latitude (LAT) or longitude (LONG) with 0
-# first we need to ensure that the data is loaded in:
-cleaned_seabird_data <- read_csv(here("clean_data/cleaned_seabird_data.csv"))
-# then the actual work
 lat_long_NA_replaced_by_mutate <- cleaned_seabird_data %>% mutate(LAT = coalesce(LAT, 0, na.rm = TRUE),
                                                                   LONG = coalesce(LONG, 0, na.rm = TRUE))
 

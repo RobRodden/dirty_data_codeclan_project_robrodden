@@ -193,9 +193,17 @@ cleaned_names_cleaned_seabird_data %>%
 
 # Q5: How many penguins were seen?
 ```{r}
-library(stringr)
+pattern <-  "[Pp]enguin]"  #"(?i)pengiun"
+
+pattern_id_pengiun <- cleaned_names_cleaned_seabird_data %>% 
+  str_detect(pattern) %>% 
+  flatten_chr() %>%
+  length()
+
+view(cleaned_names_cleaned_seabird_data)
+
 cleaned_names_cleaned_seabird_data %>% 
-  filter(str_detect(species_common_name_taxon_age_sex_plumage_phase, pattern = "[Pp]enguin")) %>%
+  filter(str_detect(pattern)) %>%
   group_by(species_common_name_taxon_age_sex_plumage_phase, species_scientific_name_taxon_age_sex_plumage_phase, species_abbreviation, count) %>% 
   summarise(character_count = n()) %>% 
   arrange(desc(character_count))
