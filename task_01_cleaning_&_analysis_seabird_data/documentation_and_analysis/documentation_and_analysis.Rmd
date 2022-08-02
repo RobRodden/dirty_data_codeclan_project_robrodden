@@ -93,7 +93,7 @@ cleaned_names_cleaned_seabird_data %>%
 
 # therefore bird with highest total count = short tailed shearwater
 
-# to note I tried a number of alternatives eg I figured that that column name with the most accurate classification of the birds would be the Species Abbreviation however despite repeated attempts I could get it down to one count per entry:
+# to note I tried a number of alternatives eg I figured that that column name with the most accurate classification of the birds would be the Species Abbreviation however despite repeated attempts I could not get it down to one count per entry:
 
 data_new2 <- as.data.frame(apply(test, 2, function(x) gsub("\\s+", "", x))) # Removes blanks, however changes count column to character; I address this in the next step.
 glimpse(data_new2)
