@@ -183,9 +183,31 @@ cleaned_names_cleaned_seabird_data %>%
 # Q4: How many different types of birds were only ever seen in groups of 1?
 ```{r}
 cleaned_names_cleaned_seabird_data %>% 
-  group_by(species_abbreviation, count) %>% 
+  group_by(species_common_name_taxon_age_sex_plumage_phase, species_scientific_name_taxon_age_sex_plumage_phase, species_abbreviation, count) %>% 
   filter(count == 1) %>% 
   summarise(character_count = n()) %>% 
   arrange(desc(character_count))
+
+# Answer = 298
+```
+
+# Q5: How many penguins were seen?
+```{r}
+pattern <-  "[Pp]enguin]"  #"(?i)pengiun"
+
+pattern_id_pengiun <- cleaned_names_cleaned_seabird_data %>% 
+  str_detect(pattern) %>% 
+  flatten_chr() %>%
+  length()
+
+view(cleaned_names_cleaned_seabird_data)
+
+cleaned_names_cleaned_seabird_data %>% 
+  filter(str_detect(pattern)) %>%
+  group_by(species_common_name_taxon_age_sex_plumage_phase, species_scientific_name_taxon_age_sex_plumage_phase, species_abbreviation, count) %>% 
+  summarise(character_count = n()) %>% 
+  arrange(desc(character_count))
+
+
 ```
 
