@@ -41,7 +41,7 @@ Bird_data_by_record_ID <- read_excel("raw_data/seabirds.xls",
 Bird_data_by_record_ID <- read_excel(here("raw_data/seabirds.xls"), sheet = "Bird data by record ID") # receiving error message "warning message: expecting logical in I21756 / R21756C9: got 'M'"; having looked at the data I can see there is one entry 
 
 # this error can be resolved by upping the guess_max from it's default 1000 to 30000 - taking it past the issue.
-Bird_data_by_record_ID <- read_excel(here("raw_data/seabirds.xls"), sheet = "Bird data by record ID", guess_max = 30000)
+Bird_data_by_record_ID <- read_excel(here("raw_data/seabirds.xls"), sheet = "Bird data by record ID", guess_max = 30000) # I found this on the internet as a solution and as I don't intend to use this column it seemed preferable (easier) to trying to fix the column type.
 
 
 Ship_data_by_record_ID <- read_excel("raw_data/seabirds.xls",
