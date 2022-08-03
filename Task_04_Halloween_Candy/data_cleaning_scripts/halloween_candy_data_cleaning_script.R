@@ -49,6 +49,7 @@ glimpse(boing_boing_candy_2017)
 boing_boing_candy_2015_cleaned_names <- clean_names(boing_boing_candy_2015)
 boing_boing_candy_2016_cleaned_names <- clean_names(boing_boing_candy_2016)
 boing_boing_candy_2017_cleaned_names <- clean_names(boing_boing_candy_2017)
+view(boing_boing_candy_2015_cleaned_names)
 
 # at this point I like to have a look at the column names - to try and establish if the column names match up
 names(boing_boing_candy_2015_cleaned_names)
@@ -71,21 +72,46 @@ colnames(boing_boing_candy_2017_cleaned_names) <- gsub('q10_', '', colnames(boin
 colnames(boing_boing_candy_2017_cleaned_names) <- gsub('q11_', '', colnames(boing_boing_candy_2017_cleaned_names), fixed=TRUE)
 colnames(boing_boing_candy_2017_cleaned_names) <- gsub('q12_', '', colnames(boing_boing_candy_2017_cleaned_names), fixed=TRUE)
 
-# now to tidy up some other column names
-boing_boing_candy_2017_cleaned_names <- rename(boing_boing_candy_2017_cleaned_names, how_old_are_you = age)
-boing_boing_candy_2016_cleaned_names <- rename(boing_boing_candy_2016_cleaned_names, gender = your_gender)
-boing_boing_candy_2016_cleaned_names <- rename(boing_boing_candy_2016_cleaned_names, country = which_country_do_you_live_in)
-boing_boing_candy_2015_cleaned_names <- rename(boing_boing_candy_2015_cleaned_names, boxo_raisins = box_o_raisins)
-boing_boing_candy_2015_cleaned_names <- rename(boing_boing_candy_2015_cleaned_names, anonymous_brown_globs_that_come_in_black_and_orange_wrappers_a_k_a_mary_janes = anonymous_brown_globs_that_come_in_black_and_orange_wrappers)
-boing_boing_candy_2016_cleaned_names <- rename(boing_boing_candy_2016_cleaned_names, anonymous_brown_globs_that_come_in_black_and_orange_wrappers_a_k_a_mary_janes = anonymous_brown_globs_that_come_in_black_and_orange_wrappers)
-boing_boing_candy_2015_cleaned_names <- rename(boing_boing_candy_2015_cleaned_names, anonymous_brown_globs_that_come_in_black_and_orange_wrappers_a_k_a_mary_janes = mary_janes)
+# now to tidy up some other column names - to note, i've decided to order these chronologically (as opposed to the order I found the issue) as there is a problem that crops up relating to the 2015 file
 
+boing_boing_candy_2015_cleaned_names <- rename(boing_boing_candy_2015_cleaned_names, boxo_raisins = box_o_raisins)
+
+# it is at this point I realised that there appear to be 2 columns in this file (2015) for the same product ie "anonymous_brown_globs_that_come_in_black_and_orange_wrappers_a_k_a_mary_janes" - having put out slack to see what others have done there wasn't an answer - update, I've decided to use identical
+# update, the issue seems to also exist in the 2016 data
+
+identical(boing_boing_candy_2015_cleaned_names[['anonymous_brown_globs_that_come_in_black_and_orange_wrappers']],boing_boing_candy_2015_cleaned_names[['mary_janes']])
+# the response for 2015 is a TRUE therefore I'm going to ignore column 52 "mary_janes"
+boing_boing_candy_2015_cleaned_names <- rename(boing_boing_candy_2015_cleaned_names, DO_NOT_USE_DUPLICATE_OF_anonymous_brown_globs_that_come_in_black_and_orange_wrappers_a_k_a_mary_janes = mary_janes)
+# quick check that it worked
+names(boing_boing_candy_2015_cleaned_names)
+
+# now to do 2016
+identical(boing_boing_candy_2016[['anonymous_brown_globs_that_come_in_black_and_orange_wrappers']],boing_boing_candy_2016[['mary_janes']])
+# the response for 2016 is a TRUE therefore I'm going to ignore column 52 "mary_janes"
+boing_boing_candy_2016_cleaned_names <- rename(boing_boing_candy_2016_cleaned_names, DO_NOT_USE_DUPLICATE_OF_anonymous_brown_globs_that_come_in_black_and_orange_wrappers_a_k_a_mary_janes = mary_janes)
+# quick check that it worked
+names(boing_boing_candy_2016_cleaned_names)
+
+
+# we can now continue with renaming columns
+boing_boing_candy_2015_cleaned_names <- rename(boing_boing_candy_2015_cleaned_names, anonymous_brown_globs_that_come_in_black_and_orange_wrappers_a_k_a_mary_janes = anonymous_brown_globs_that_come_in_black_and_orange_wrappers)
+boing_boing_candy_2016_cleaned_names <- rename(boing_boing_candy_2016_cleaned_names, gender = your_gender)
+boing_boing_candy_2016_cleaned_names <- rename(boing_boing_candy_2016_cleaned_names, sweetums = sweetums_a_friend_to_diabetes)
+boing_boing_candy_2016_cleaned_names <- rename(boing_boing_candy_2016_cleaned_names, country = which_country_do_you_live_in)
+boing_boing_candy_2016_cleaned_names <- rename(boing_boing_candy_2016_cleaned_names, anonymous_brown_globs_that_come_in_black_and_orange_wrappers_a_k_a_mary_janes = anonymous_brown_globs_that_come_in_black_and_orange_wrappers)
+boing_boing_candy_2017_cleaned_names <- rename(boing_boing_candy_2017_cleaned_names, how_old_are_you = age)
+boing_boing_candy_2017_cleaned_names <- rename(boing_boing_candy_2017_cleaned_names, sweetums = sweetums_a_friend_to_diabetes)
+
+# quick review of our work
+names(boing_boing_candy_2015_cleaned_names)
+names(boing_boing_candy_2016_cleaned_names)
 names(boing_boing_candy_2017_cleaned_names)
-view(boing_boing_candy_2017_cleaned_names)
+
 
 # going to try joining
 joined_bbc_2015_2016_2017 <- bind_rows(boing_boing_candy_2015_cleaned_names, boing_boing_candy_2016_cleaned_names, boing_boing_candy_2017_cleaned_names)
 view(joined_bbc_2015_2016_2017)
+names(joined_bbc_2015_2016_2017)
 
 # decided that things would be a lot easier if the columns were order alphabetically
 joined_bbc_2015_2016_2017_column_alphab <- joined_bbc_2015_2016_2017[,order(colnames(joined_bbc_2015_2016_2017))]
@@ -93,9 +119,16 @@ names(joined_bbc_2015_2016_2017_column_alphab)
 # glad I did this, found a column straight away that needs changed - have added this to the other name changes above
 
 
-names(joined_bbc_2015_2016_2017)
 
-view(what_does_data_look_like_after_using_clean_names)
+candy_2015 <- read_xlsx(here("raw_data/boing-boing-candy-2015.xlsx")) %>% 
+  clean_names()
+
+identical(candy_2015$anonymous_brown_globs_that_come_in_black_and_orange_wrappers,
+          candy_2015$mary_janes)
+
+candy_2015 %>% 
+  select(anonymous_brown_globs_that_come_in_black_and_orange_wrappers,
+         mary_janes)
 
 
 
