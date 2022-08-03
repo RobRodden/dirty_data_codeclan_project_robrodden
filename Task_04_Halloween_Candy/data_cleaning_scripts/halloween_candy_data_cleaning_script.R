@@ -14,6 +14,14 @@ boing_boing_candy_2015 <- read_excel(here("raw_data/boing-boing-candy-2015.xlsx"
 boing_boing_candy_2016 <- read_excel(here("raw_data/boing-boing-candy-2016.xlsx"))
 boing_boing_candy_2017 <- read_excel(here("raw_data/boing-boing-candy-2017.xlsx"))
 
+# having learned that at a later point I want 2017 to have a timestamp column i'm going to add it here:
+timestamp <- c(2017)
+boing_boing_candy_2017 <- cbind(boing_boing_candy_2017, timestamp)
+view(boing_boing_candy_2017)
+glimpse(boing_boing_candy_2017)
+glimpse(boing_boing_candy_2016)
+
+
 # now to take a look at some of the meta data
 ## loading in the raw data - as a personal preference I also like to view the data at this point
 view(boing_boing_candy_2015)
@@ -51,10 +59,22 @@ boing_boing_candy_2016_cleaned_names <- clean_names(boing_boing_candy_2016)
 boing_boing_candy_2017_cleaned_names <- clean_names(boing_boing_candy_2017)
 view(boing_boing_candy_2015_cleaned_names)
 
-# at this point I like to have a look at the column names - to try and establish if the column names match up
+
+
+# at this point I like to have a look at the column names - to try and establish if the column names match up; I also like to open the files if possible; and see if there are any missing values
 names(boing_boing_candy_2015_cleaned_names)
 names(boing_boing_candy_2016_cleaned_names)
 names(boing_boing_candy_2017_cleaned_names)
+view(boing_boing_candy_2015_cleaned_names)
+view(boing_boing_candy_2016_cleaned_names)
+view(boing_boing_candy_2017_cleaned_names)
+boing_boing_candy_2015_cleaned_names %>% 
+  summarise(across(.fns = ~ sum(is.na(.x))))
+boing_boing_candy_2016_cleaned_names %>% 
+  summarise(across(.fns = ~ sum(is.na(.x))))
+boing_boing_candy_2017_cleaned_names %>% 
+  summarise(across(.fns = ~ sum(is.na(.x))))
+
 
 # awful lot of 2017 start with "q6_" - found this little gem on stack overflow 
 colnames(boing_boing_candy_2017_cleaned_names) <- gsub('q6_', '', colnames(boing_boing_candy_2017_cleaned_names), fixed=TRUE)
@@ -80,15 +100,16 @@ boing_boing_candy_2015_cleaned_names <- rename(boing_boing_candy_2015_cleaned_na
 # update, the issue seems to also exist in the 2016 data
 
 identical(boing_boing_candy_2015_cleaned_names[['anonymous_brown_globs_that_come_in_black_and_orange_wrappers']],boing_boing_candy_2015_cleaned_names[['mary_janes']])
-# the response for 2015 is a False therefore I'm going to ignore column 52 "mary_janes"
-boing_boing_candy_2015_cleaned_names <- rename(boing_boing_candy_2015_cleaned_names, DO_NOT_USE_DUPLICATE_OF_anonymous_brown_globs_that_come_in_black_and_orange_wrappers_a_k_a_mary_janes = mary_janes)
+# the response for 2015 is a FALSE therefore I'm going to ignore column 52 "mary_janes" - if I had some more expertise / and time at this point I would probably look to see if one column was a more complete version of the other.
+
+boing_boing_candy_2015_cleaned_names <- rename(boing_boing_candy_2015_cleaned_names, DO_NOT_USE_DUPLICATE_PRODUCT_OF_anonymous_brown_globs_that_come_in_black_and_orange_wrappers_a_k_a_mary_janes = mary_janes)
 # quick check that it worked
 names(boing_boing_candy_2015_cleaned_names)
 
 # now to do 2016
 identical(boing_boing_candy_2016_cleaned_names[['anonymous_brown_globs_that_come_in_black_and_orange_wrappers']],boing_boing_candy_2016_cleaned_names[['mary_janes']])
 # the response for 2016 is a TRUE therefore I'm going to ignore column 52 "mary_janes"
-boing_boing_candy_2016_cleaned_names <- rename(boing_boing_candy_2016_cleaned_names, DO_NOT_USE_DUPLICATE_OF_anonymous_brown_globs_that_come_in_black_and_orange_wrappers_a_k_a_mary_janes = mary_janes)
+boing_boing_candy_2016_cleaned_names <- rename(boing_boing_candy_2016_cleaned_names, DO_NOT_USE_DUPLICATE_PRODUCT_OF_anonymous_brown_globs_that_come_in_black_and_orange_wrappers_a_k_a_mary_janes = mary_janes)
 # quick check that it worked
 names(boing_boing_candy_2016_cleaned_names)
 
@@ -116,8 +137,18 @@ names(joined_bbc_2015_2016_2017)
 # decided that things would be a lot easier if the columns were order alphabetically
 joined_bbc_2015_2016_2017_column_alphab <- joined_bbc_2015_2016_2017[,order(colnames(joined_bbc_2015_2016_2017))]
 names(joined_bbc_2015_2016_2017_column_alphab)
+view(joined_bbc_2015_2016_2017_column_alphab)
+
+# at this point I've decided to add data to the 'Timestamp' field specifically so there is a 'date' attached to 2017 - I've checked previously and i know that the 'Timestamp' colummns in both 2015 and 2016 are full (so no chance of adding the wrong date to them)
+joined_bbc_2015_2016_2017_column_alphab %>% 
+  select(timestamp) %>% 
+  mutate(timestamp = coalesce(timestamp,
+                                     "2017", na.rm = TRUE))
+
+
 # glad I did this, found a column straight away that needs changed - have added this to the other name changes above
 
+# I will make a note that I think there's a potential issue around [76] "licorice", [77] "licorice_not_black" and [78] "licorice_yes_black" ie there's overlap
 
 
 candy_2015 <- read_xlsx(here("raw_data/boing-boing-candy-2015.xlsx")) %>% 
