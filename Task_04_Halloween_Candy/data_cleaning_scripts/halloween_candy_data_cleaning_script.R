@@ -80,13 +80,13 @@ boing_boing_candy_2015_cleaned_names <- rename(boing_boing_candy_2015_cleaned_na
 # update, the issue seems to also exist in the 2016 data
 
 identical(boing_boing_candy_2015_cleaned_names[['anonymous_brown_globs_that_come_in_black_and_orange_wrappers']],boing_boing_candy_2015_cleaned_names[['mary_janes']])
-# the response for 2015 is a TRUE therefore I'm going to ignore column 52 "mary_janes"
+# the response for 2015 is a False therefore I'm going to ignore column 52 "mary_janes"
 boing_boing_candy_2015_cleaned_names <- rename(boing_boing_candy_2015_cleaned_names, DO_NOT_USE_DUPLICATE_OF_anonymous_brown_globs_that_come_in_black_and_orange_wrappers_a_k_a_mary_janes = mary_janes)
 # quick check that it worked
 names(boing_boing_candy_2015_cleaned_names)
 
 # now to do 2016
-identical(boing_boing_candy_2016[['anonymous_brown_globs_that_come_in_black_and_orange_wrappers']],boing_boing_candy_2016[['mary_janes']])
+identical(boing_boing_candy_2016_cleaned_names[['anonymous_brown_globs_that_come_in_black_and_orange_wrappers']],boing_boing_candy_2016_cleaned_names[['mary_janes']])
 # the response for 2016 is a TRUE therefore I'm going to ignore column 52 "mary_janes"
 boing_boing_candy_2016_cleaned_names <- rename(boing_boing_candy_2016_cleaned_names, DO_NOT_USE_DUPLICATE_OF_anonymous_brown_globs_that_come_in_black_and_orange_wrappers_a_k_a_mary_janes = mary_janes)
 # quick check that it worked
