@@ -3,15 +3,10 @@ title: "R Notebook"
 output: html_notebook
 ---
 
-```{r}
-joined_BD_record_ID_and_SD_record_ID_LJ %>%
-  summarise(across(.fns = ~ sum(is.na(.x))))
-```
-
-```{r}
-joined_BD_record_ID_and_SD_record_ID_IJ %>%
-  summarise(across(.fns = ~ sum(is.na(.x))))
-```
+---
+title: "R Notebook"
+output: html_notebook
+---
 
 ```{r}
 # test where the top level of the project directory is
@@ -23,9 +18,39 @@ cleaned_names_with_janitor <- cleaned_seabird_data
 view(cleaned_names_with_janitor)
 
 # loading in the cleaned data
-cleaned_seabird_data <- read_csv(here("clean_data/cleaned_seabird_data.csv"))
-view(cleaned_seabird_data)
-glimpse(cleaned_seabird_data)
+cleaned_halloween_candy_data <- read_csv(here("clean_data/cleaned_halloween_candy_data.csv"))
+view(cleaned_halloween_candy_data)
+glimpse(cleaned_halloween_candy_data)
+```
+
+```{r}
+test <- cleaned_halloween_candy_data %>% 
+  group_by(country) %>% 
+  summarise(character_count = n()) %>% 
+  arrange(desc(character_count))
+head(test)
+
+summarised_scientific_name <- cleaned_names_cleaned_seabird_data %>% 
+  group_by(species_common_name_taxon_age_sex_plumage_phase, species_scientific_name_taxon_age_sex_plumage_phase, species_abbreviation) %>% 
+summarise(character_count = n()) %>% 
+arrange(desc(character_count))
+head(summarised_scientific_name)
+
+
+```
+
+
+
+
+
+```{r}
+joined_BD_record_ID_and_SD_record_ID_LJ %>%
+  summarise(across(.fns = ~ sum(is.na(.x))))
+```
+
+```{r}
+joined_BD_record_ID_and_SD_record_ID_IJ %>%
+  summarise(across(.fns = ~ sum(is.na(.x))))
 ```
 
 ```{r}
@@ -202,3 +227,5 @@ cleaned_names_cleaned_seabird_data %>%
 
 
 ```
+
+

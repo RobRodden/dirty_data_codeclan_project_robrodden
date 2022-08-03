@@ -19,23 +19,26 @@ boing_boing_candy_2017 <- read_excel(here("raw_data/boing-boing-candy-2017.xlsx"
 boing_boing_candy_2017 <- boing_boing_candy_2017 %>% 
   mutate(timestamp   = ymd_hm("2017-01-01 12:00"))
 glimpse(boing_boing_candy_2017)
+view(boing_boing_candy_2017)
+
+    # working version - but bad way of doing it
+    # timestamp <- c(2017-01-01)
+    # boing_boing_candy_2017 <- cbind(boing_boing_candy_2017, timestamp)
+    # boing_boing_candy_2017$timestamp <- ymd(boing_boing_candy_2017$timestamp)
+    # class(boing_boing_candy_2017$timestamp)
+
+    # all my failed attempts
+    # boing_boing_candy_2017$timestamp <- as.Date(boing_boing_candy_2017$timestamp , format = "%m/%d/%y")
+    # as.Date(boing_boing_candy_2017$timestamp,format = "%y-%m-%d")
+    # mutate(boing_boing_candy_2017, timestamp = as.Date(timestamp, format = "%m/%d/%Y"))
+    # class(boing_boing_candy_2017$timestamp)
+
+    # nope didn't work
+    # boing_boing_candy_2017 %>% 
+    # mutate(timestamp = ymd(timestamp))
 
 
-# working version - but bad way of doing it
-timestamp <- c(2017-01-01)
-boing_boing_candy_2017 <- cbind(boing_boing_candy_2017, timestamp)
-boing_boing_candy_2017$timestamp <- ymd(boing_boing_candy_2017$timestamp)
-class(boing_boing_candy_2017$timestamp)
-
-# all my failed attempts
-boing_boing_candy_2017$timestamp <- as.Date(boing_boing_candy_2017$timestamp , format = "%m/%d/%y")
-as.Date(boing_boing_candy_2017$timestamp,format = "%y-%m-%d")
-mutate(boing_boing_candy_2017, timestamp = as.Date(timestamp, format = "%m/%d/%Y"))
-class(boing_boing_candy_2017$timestamp)
-# nope didn't work
-boing_boing_candy_2017 %>% 
-  mutate(timestamp = ymd(timestamp))
-
+# back to our cleaning
 view(boing_boing_candy_2017)
 glimpse(boing_boing_candy_2017)
 glimpse(boing_boing_candy_2016)
@@ -109,6 +112,7 @@ colnames(boing_boing_candy_2017_cleaned_names) <- gsub('q10_', '', colnames(boin
 colnames(boing_boing_candy_2017_cleaned_names) <- gsub('q11_', '', colnames(boing_boing_candy_2017_cleaned_names), fixed=TRUE)
 colnames(boing_boing_candy_2017_cleaned_names) <- gsub('q12_', '', colnames(boing_boing_candy_2017_cleaned_names), fixed=TRUE)
 
+
 # now to tidy up some other column names - to note, i've decided to order these chronologically (as opposed to the order I found the issue) as there is a problem that crops up relating to the 2015 file
 
 boing_boing_candy_2015_cleaned_names <- rename(boing_boing_candy_2015_cleaned_names, boxo_raisins = box_o_raisins)
@@ -138,6 +142,7 @@ boing_boing_candy_2016_cleaned_names <- rename(boing_boing_candy_2016_cleaned_na
 boing_boing_candy_2016_cleaned_names <- rename(boing_boing_candy_2016_cleaned_names, country = which_country_do_you_live_in)
 boing_boing_candy_2016_cleaned_names <- rename(boing_boing_candy_2016_cleaned_names, anonymous_brown_globs_that_come_in_black_and_orange_wrappers_a_k_a_mary_janes = anonymous_brown_globs_that_come_in_black_and_orange_wrappers)
 boing_boing_candy_2017_cleaned_names <- rename(boing_boing_candy_2017_cleaned_names, how_old_are_you = age)
+boing_boing_candy_2017_cleaned_names <- rename(boing_boing_candy_2017_cleaned_names, x100_grand_bar = "100_grand_bar")
 boing_boing_candy_2017_cleaned_names <- rename(boing_boing_candy_2017_cleaned_names, sweetums = sweetums_a_friend_to_diabetes)
 
 # quick review of our work
@@ -164,7 +169,21 @@ view(joined_bbc_2015_2016_2017_column_alphab)
 
 # now to remove those columns that we don't think we need - yes, I could probably have done this earlier but I want to see the columns fixed first to ensure I didn't remove any inadvertently.
 
+# this helps me identify which columns to select
+names(joined_bbc_2015_2016_2017_column_alphab)
 
+## I should also point out that there is a boing boing article on the dataset which is a good guide for which columns to pick.
+joined_bbc_2015_2016_2017_column_alphab_specific_columns <- joined_bbc_2015_2016_2017_column_alphab %>% 
+  select(anonymous_brown_globs_that_come_in_black_and_orange_wrappers_a_k_a_mary_janes, any_full_sized_candy_bar, black_jacks, blue_m_ms, bonkers_the_board_game:boxo_raisins, broken_glow_stick:caramellos, chick_o_sticks_we_don_t_know_what_that_is, chiclets, coffee_crisp, country, dark_chocolate_hershey, fuzzy_peaches:glow_sticks, goo_goo_clusters:green_party_m_ms, gum_from_baseball_cards:hard_candy, heath_bar:how_old_are_you, independent_m_ms, internal_id:jolly_ranchers_good_flavor, junior_mints, kinder_happy_hippo:maynards, mike_and_ike:nown_laters, peanut_butter_bars:peeps, pixy_stix, red_m_ms:sourpatch_kids_i_e_abominations_of_nature, starburst, swedish_fish:take_5, third_party_m_ms:vials_of_pure_high_fructose_corn_syrup_for_main_lining_into_your_vein, whatchamacallit_bars, x100_grand_bar, york_peppermint_patties)
+view(joined_bbc_2015_2016_2017_column_alphab_specific_columns)
+
+# writing the cleaned data to a markdown file
+write_csv(joined_bbc_2015_2016_2017_column_alphab_specific_columns, "clean_data/cleaned_halloween_candy_data.csv")
+
+# and am going to see if there are any "easy wins" 
+
+joined_bbc_2015_2016_2017_column_alphab %>% 
+  summarise(across(.fns = ~ sum(is.na(.x))))
 
 
 candy_2015 <- read_xlsx(here("raw_data/boing-boing-candy-2015.xlsx")) %>% 
