@@ -14,28 +14,33 @@ here::here()
 
 # loading packages
 library(janitor)
-cleaned_names_with_janitor <- cleaned_seabird_data
-view(cleaned_names_with_janitor)
 
 # loading in the cleaned data
 cleaned_halloween_candy_data <- read_csv(here("clean_data/cleaned_halloween_candy_data.csv"))
 view(cleaned_halloween_candy_data)
 glimpse(cleaned_halloween_candy_data)
 ```
-
+# now to have a look at the data
 ```{r}
-test <- cleaned_halloween_candy_data %>% 
+glimpse(cleaned_halloween_candy_data)
+view(cleaned_halloween_candy_data)
+```
+
+# let's see if there are any columns that we can remove due to having no data - nope, all columns have at least some data.
+```{r}
+cleaned_halloween_candy_data %>%
+  summarise(across(.fns = ~ sum(is.na(.x))))
+```
+
+# Now to have a look at some of the data in specific columns
+```{r}
+HC_country_overview <- cleaned_halloween_candy_data %>% 
   group_by(country) %>% 
   summarise(character_count = n()) %>% 
   arrange(desc(character_count))
-head(test)
+head(HC_country_overview, 10)
 
-summarised_scientific_name <- cleaned_names_cleaned_seabird_data %>% 
-  group_by(species_common_name_taxon_age_sex_plumage_phase, species_scientific_name_taxon_age_sex_plumage_phase, species_abbreviation) %>% 
-summarise(character_count = n()) %>% 
-arrange(desc(character_count))
-head(summarised_scientific_name)
-
+# straight away we can see that headings related to the USA need unified - so I need to hand back to data cleaning.
 
 ```
 
@@ -44,7 +49,7 @@ head(summarised_scientific_name)
 
 
 ```{r}
-joined_BD_record_ID_and_SD_record_ID_LJ %>%
+cleaned_halloween_candy_data %>%
   summarise(across(.fns = ~ sum(is.na(.x))))
 ```
 

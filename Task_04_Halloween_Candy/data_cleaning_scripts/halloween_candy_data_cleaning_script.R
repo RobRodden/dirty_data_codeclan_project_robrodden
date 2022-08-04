@@ -180,6 +180,9 @@ view(joined_bbc_2015_2016_2017_column_alphab_specific_columns)
 # writing the cleaned data to a markdown file
 write_csv(joined_bbc_2015_2016_2017_column_alphab_specific_columns, "clean_data/cleaned_halloween_candy_data.csv")
 
+
+
+
 # and am going to see if there are any "easy wins" 
 
 joined_bbc_2015_2016_2017_column_alphab %>% 
