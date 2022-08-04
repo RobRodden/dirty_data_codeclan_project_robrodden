@@ -188,50 +188,34 @@ names(HC_data_cleaning_v2)
 
 HC_data_cleaning_v2 <- HC_data_cleaning_v2 %>% select(c(98,19,22,36,38), everything())
 
+names(HC_data_cleaning_v2)
 view(HC_data_cleaning_v2)
 
+HC_data_cleaning_v2_long <- HC_data_cleaning_v2 %>% 
+  pivot_longer(6:105, names_to = "exam_question", values_to = "score")
+names(HC_data_cleaning_v2_long)
+view(HC_data_cleaning_v2_long)
 
 # and am going to see if there are any "easy wins" 
 
 joined_bbc_2015_2016_2017_column_alphab %>% 
   summarise(across(.fns = ~ sum(is.na(.x))))
 
+# comparison code from a colleague - this was so that I could check my identical usage was correct, which it wasn't
+# candy_2015 <- read_xlsx(here("raw_data/boing-boing-candy-2015.xlsx")) %>% 
+#  clean_names()
+# identical(candy_2015$anonymous_brown_globs_that_come_in_black_and_orange_wrappers,
+#          candy_2015$mary_janes)
+# candy_2015 %>% 
+#  select(anonymous_brown_globs_that_come_in_black_and_orange_wrappers,
+#         mary_janes)
 
-candy_2015 <- read_xlsx(here("raw_data/boing-boing-candy-2015.xlsx")) %>% 
-  clean_names()
-
-identical(candy_2015$anonymous_brown_globs_that_come_in_black_and_orange_wrappers,
-          candy_2015$mary_janes)
-
-candy_2015 %>% 
-  select(anonymous_brown_globs_that_come_in_black_and_orange_wrappers,
-         mary_janes)
-
-
-
-# testing how the data looks once joined
-joined_BD_record_ID_and_SD_record_ID_IJ <- inner_join(Bird_data_by_record_ID, Ship_data_by_record_ID, by = "RECORD ID")
-joined_BD_record_ID_and_SD_record_ID_LJ <- left_join(Bird_data_by_record_ID, Ship_data_by_record_ID, by = "RECORD ID")
-joined_BD_record_ID_and_SD_record_ID_RJ <- right_join(Bird_data_by_record_ID, Ship_data_by_record_ID, by = "RECORD ID")
-## interesting to note that there is only one difference in the number of rows between these joins eg innner join results in 49,018 rows (by 52) where as the LJ results in 49,019 (by 52); at a later point I decided to add a right join as a comparison - only learned that 
-## given that we are interested in the bird data then I'm goin to use the LJ - I can then work out what relevance that extra line has and remove it if necessary.
-
-view(joined_BD_record_ID_and_SD_record_ID)
+# checking if there are any rows that can be dropped due to lack of data 
+nrow(HC_data_cleaning_v2) - nrow(drop_na(HC_data_cleaning_v2)) # 9,349 - so not at this stage
 
 
-nrow(joined_BD_record_ID_and_SD_record_ID_IJ) - nrow(drop_na(joined_BD_record_ID_and_SD_record_ID_IJ))
 view(joined_BD_record_ID_and_SD_record_ID_IJ)
 
-
-# At this point I'm going to select only the columns that I think I need
-names(joined_BD_record_ID_and_SD_record_ID_LJ)
-## interesting to note that there are 2 columns that don't appear when you view the data but are there when you invoke the names command eg LATCELL AND LONGCELL.
-joined_BD_record_ID_and_SD_record_ID_LJ_specific_columns <- joined_BD_record_ID_and_SD_record_ID_LJ %>% 
-  select(RECORD.x, `RECORD ID`, `Species common name (taxon [AGE / SEX / PLUMAGE PHASE])`, `Species  scientific name (taxon [AGE /SEX /  PLUMAGE PHASE])`, `Species abbreviation`, COUNT, DATE, LAT, LONG, LATCELL, LONGECELL)
-view(joined_BD_record_ID_and_SD_record_ID_LJ_specific_columns)
-
-# writing the cleaned data to a markdown file
-write_csv(joined_BD_record_ID_and_SD_record_ID_LJ_specific_columns, "clean_data/cleaned_seabird_data.csv")
 
 # as indicated at line 43 in the file 'documentation_and_analysis.Rmd" picking up the file needing missing lat and long values addressed.
 
@@ -239,14 +223,4 @@ write_csv(joined_BD_record_ID_and_SD_record_ID_LJ_specific_columns, "clean_data/
 lat_long_NA_replaced_by_mutate <- cleaned_seabird_data %>% mutate(LAT = coalesce(LAT, 0, na.rm = TRUE),
                                                                   LONG = coalesce(LONG, 0, na.rm = TRUE))
 
-# writing this back to our clean data folder
-write_csv(lat_long_NA_replaced_by_mutate, "clean_data/cleaned_seabird_data_lat_long_zeros.csv")
 
-
-
-
-### alt version
-test_specific_columns <- joined_BD_record_ID_and_SD_record_ID_LJ %>% 
-  select(`Species abbreviation`, COUNT)
-view(test_specific_columns)
-write_csv(test_specific_columns, "clean_data/test_specific_columns.csv")
