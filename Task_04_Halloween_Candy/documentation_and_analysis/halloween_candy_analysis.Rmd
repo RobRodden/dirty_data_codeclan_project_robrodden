@@ -69,10 +69,9 @@ view(HC_data_cleaning_v2_long)
 ```
 
 ```{r}
-test$country <- tolower(test$country)
-
 test <- HC_data_cleaning_v2_long %>% 
-  mutate(country = str_replace_all(country, c("^Can$" = "Canada", "'merica" = "USA", "Ahem....Amerca" = "USA","([A-Z]*[a-z]+'Merica)$" = "USA")))
+  mutate(country = str_replace_all(country, c("a tropical island south of the equator" = "unknown", "^a$" = "unknown","atlantis" = "unknown","california" = "usa", "canada`" = "canada","^can$" = "canada","canae" = "canada","cascadia" = "unknown","denial" = "unknown","earth" = "unknown","endland" = "england","españa" = "spain","eua" = "uae","fear and loathing" = "unknown","god's country" = "unknown","i don't know anymore" = "unknown","i pretend to be from canada, but i am really from the united states." = "usa","insanity lately" = "unknown", "'merica" = "usa","merica" = "usa","murica" = "usa","murrika" = "usa","n. ausa" = "usa","narnia" = "unknown","neverland" = "unknown","new jersey" = "usa","new york" = "usa","north carolina" = "usa","not the usa or canada" = "usa","one of the best ones" = "unknown","pittsburgh" = "usa","see above" = "unknown","somewhere" = "unknown","soviet canuckistan" = " unknown","sub-canadian north ausa... usa" = "usa","subscribe to dm4uz3 on youtube" = "unknown","the best one - usa" = "usa","the netherlands" = "netherlands","the republic of unknown" = "unknown","the united states" = "usa", "america" = "usa", "usaa" = "usa","ausa" = "usa","the yoo ess of aaayyyyyy" = "usa","there isn't one for old men" = "unknown","this one" = "unknown","trumpistan" = "usa", "ahem....amerca" = "usa","([A-Z]*[a-z]+'merica)$" = "USA")))
+
 view(test)
 
 test %>% 
