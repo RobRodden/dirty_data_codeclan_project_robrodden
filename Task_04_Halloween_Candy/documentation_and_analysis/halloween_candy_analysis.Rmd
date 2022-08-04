@@ -40,6 +40,10 @@ HC_country_overview <- cleaned_halloween_candy_data %>%
   arrange(desc(character_count))
 head(HC_country_overview, 10)
 
+cleaned_halloween_candy_data %>% 
+  distinct(country) %>% 
+  nrow()
+
 # straight away we can see that headings related to the USA need unified - so I need to hand back to data cleaning.
 
 ```

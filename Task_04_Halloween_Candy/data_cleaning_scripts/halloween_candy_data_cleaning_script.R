@@ -180,7 +180,15 @@ view(joined_bbc_2015_2016_2017_column_alphab_specific_columns)
 # writing the cleaned data to a markdown file
 write_csv(joined_bbc_2015_2016_2017_column_alphab_specific_columns, "clean_data/cleaned_halloween_candy_data.csv")
 
+HC_data_cleaning_v2 <- read_csv(here("clean_data/cleaned_halloween_candy_data.csv"))
+view(HC_data_cleaning_v2)
+names(HC_data_cleaning_v2)
 
+# now lets condense the information as we can make it more compact and user friendly - to do this we first need to get the columns in a suitable order
+
+HC_data_cleaning_v2 <- HC_data_cleaning_v2 %>% select(c(98,19,22,36,38), everything())
+
+view(HC_data_cleaning_v2)
 
 
 # and am going to see if there are any "easy wins" 
