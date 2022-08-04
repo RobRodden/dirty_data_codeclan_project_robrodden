@@ -6,6 +6,7 @@ library(readxl)
 library(janitor)
 library(here)
 library(lubridate)
+library(stringr)
 
 # test where the top level of the project directory is 
 here::here()
@@ -192,9 +193,13 @@ names(HC_data_cleaning_v2)
 view(HC_data_cleaning_v2)
 
 HC_data_cleaning_v2_long <- HC_data_cleaning_v2 %>% 
-  pivot_longer(6:105, names_to = "exam_question", values_to = "score")
+  pivot_longer(6:105, names_to = "Candy", values_to = "Rating")
 names(HC_data_cleaning_v2_long)
 view(HC_data_cleaning_v2_long)
+
+# right, now to try cleaning the actual data in the columns:
+HC_data_cleaning_v2_long %>% 
+  filter(str_detect)
 
 # and am going to see if there are any "easy wins" 
 
