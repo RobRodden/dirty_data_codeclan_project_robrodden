@@ -199,7 +199,11 @@ view(HC_data_cleaning_v2_long)
 
 # right, now to try cleaning the actual data in the columns:
 HC_data_cleaning_v2_long %>% 
-  filter(str_detect)
+  filter(str_replace_all(country, pattern = "\\'merica", USA))
+
+
+filter(str_detect(species_common_name_taxon_age_sex_plumage_phase, pattern = "[Pp]enguin")) 
+
 
 # and am going to see if there are any "easy wins" 
 
