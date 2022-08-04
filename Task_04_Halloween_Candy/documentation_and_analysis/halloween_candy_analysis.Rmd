@@ -30,6 +30,10 @@ library(janitor)
 cleaned_halloween_candy_data <- read_csv(here("clean_data/cleaned_halloween_candy_data_pivot_long.csv"))
 view(cleaned_halloween_candy_data)
 glimpse(cleaned_halloween_candy_data)
+
+# having done a fair bit of work on country already, i've decided to add the following at the start of the process ie set everything in the country column to lower case - this should reduce the amount of tidying required.
+
+cleaned_halloween_candy_data$country <- tolower(cleaned_halloween_candy_data$country)
 ```
 # now to have a look at the data
 ```{r}
@@ -65,6 +69,8 @@ view(HC_data_cleaning_v2_long)
 ```
 
 ```{r}
+test$country <- tolower(test$country)
+
 test <- HC_data_cleaning_v2_long %>% 
   mutate(country = str_replace_all(country, c("^Can$" = "Canada", "'merica" = "USA", "Ahem....Amerca" = "USA","([A-Z]*[a-z]+'Merica)$" = "USA")))
 view(test)
