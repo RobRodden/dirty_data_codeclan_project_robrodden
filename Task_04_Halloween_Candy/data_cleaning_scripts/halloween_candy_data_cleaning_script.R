@@ -187,7 +187,7 @@ names(HC_data_cleaning_v2)
 
 # now lets condense the information as we can make it more compact and user friendly - to do this we first need to get the columns in a suitable order
 
-HC_data_cleaning_v2 <- HC_data_cleaning_v2 %>% select(c(98,19,22,36,38), everything())
+HC_data_cleaning_v2 <- HC_data_cleaning_v2 %>% select(c(19,22,36,38,98), everything())
 
 names(HC_data_cleaning_v2)
 view(HC_data_cleaning_v2)
@@ -196,6 +196,10 @@ HC_data_cleaning_v2_long <- HC_data_cleaning_v2 %>%
   pivot_longer(6:105, names_to = "Candy", values_to = "Rating")
 names(HC_data_cleaning_v2_long)
 view(HC_data_cleaning_v2_long)
+
+# lets save this work
+write_csv(HC_data_cleaning_v2_long, "clean_data/cleaned_halloween_candy_data_pivot_long.csv")
+
 
 # right, now to try cleaning the actual data in the columns:
 HC_data_cleaning_v2_long %>% 

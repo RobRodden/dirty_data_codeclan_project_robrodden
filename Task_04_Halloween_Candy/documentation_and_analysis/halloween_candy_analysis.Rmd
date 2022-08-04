@@ -7,6 +7,17 @@ output: html_notebook
 title: "R Notebook"
 output: html_notebook
 ---
+# Lets load in any necessary packages
+```{r}
+## I may not use all of these packages
+library(tidyverse)
+library(dplyr)
+library(readxl)
+library(janitor)
+library(here)
+library(lubridate)
+library(stringr)
+```
 
 ```{r}
 # test where the top level of the project directory is
@@ -16,7 +27,7 @@ here::here()
 library(janitor)
 
 # loading in the cleaned data
-cleaned_halloween_candy_data <- read_csv(here("clean_data/cleaned_halloween_candy_data.csv"))
+cleaned_halloween_candy_data <- read_csv(here("clean_data/cleaned_halloween_candy_data_pivot_long.csv"))
 view(cleaned_halloween_candy_data)
 glimpse(cleaned_halloween_candy_data)
 ```
@@ -34,38 +45,35 @@ cleaned_halloween_candy_data %>%
 
 # Now to have a look at some of the data in specific columns
 ```{r}
+
 HC_country_overview <- cleaned_halloween_candy_data %>% 
   group_by(country) %>% 
   summarise(character_count = n()) %>% 
   arrange(desc(character_count))
 head(HC_country_overview, 10)
 
-test_HC_country_overview <- test %>% 
-  group_by(country) %>% 
-  summarise(character_count = n()) %>% 
-  arrange(desc(character_count))
-head(test_HC_country_overview, 10)
-
-HC_data_cleaning_v2_long %>% 
+# use
+HC_data_cleaning_v2_long <- cleaned_halloween_candy_data %>% 
   group_by(country) %>% 
   distinct(country) %>% 
   summarise(character_count = n()) %>% 
   arrange(character_count)
 
-
+view(HC_data_cleaning_v2_long)
 # straight away we can see that headings related to the USA need unified - so I need to hand back to data cleaning.
 
 ```
 
 ```{r}
 test <- HC_data_cleaning_v2_long %>% 
-  mutate(country = str_replace_all(country, "Can", "Canada"))
+  mutate(country = str_replace_all(country, c("^Can$" = "Canada", "'merica" = "USA", "Ahem....Amerca" = "USA","([A-Z]*[a-z]+'Merica)$" = "USA")))
 view(test)
 
-  mutate(str_detect(country, pattern = "Can") %>%
+test %>% 
   group_by(country) %>% 
+  distinct(country) %>% 
   summarise(character_count = n()) %>% 
-  arrange(desc(character_count))
+  arrange(character_count)
 
 ```
 
